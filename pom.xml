@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>br.com.vaneyck.stud</groupId>
+    <groupId>br.com.vaneyck.study</groupId>
     <artifactId>Rest Assured Token</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -46,6 +46,13 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <version>3.8.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>6.5.0</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
