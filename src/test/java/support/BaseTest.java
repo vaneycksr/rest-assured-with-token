@@ -18,10 +18,10 @@ public class BaseTest {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
         // uri padrão para todos os endpoints
-        baseURI = "http://demo.testfire.net/";
+        baseURI = "http://demo.testfire.net";
 
         // path padrão
-        basePath = "api/";
+        basePath = "/api";
 
         // define que todas as requisições que serão enviadas vão ser do tipo JSON
         RestAssured.requestSpecification = new RequestSpecBuilder()
