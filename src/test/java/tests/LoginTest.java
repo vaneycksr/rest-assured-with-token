@@ -6,6 +6,8 @@ import org.junit.Test;
 import support.BaseTest;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 
 public class LoginTest extends BaseTest {
 
@@ -23,7 +25,10 @@ public class LoginTest extends BaseTest {
         when().
                 post(LOGIN_ENDPOINT).
         then().
-                statusCode(HttpStatus.SC_OK);
+                statusCode(HttpStatus.SC_OK).
+                body("success",is(user.getUsername()+" is now logged in")).
+                body("Authorization",is(notNullValue()));
+
 
     }
 
