@@ -28,8 +28,55 @@ public class LoginTest extends BaseTest {
                 statusCode(HttpStatus.SC_OK).
                 body("success",is(user.getUsername()+" is now logged in")).
                 body("Authorization",is(notNullValue()));
+    }
 
+    @Test
+    public void testLoginComUsernameInvalidoEPasswordCorreto(){
+
+        User user = new User();
+        user.setUsername("qqq");
+        user.setPassword("demo1234");
+
+        given().
+                body(user).
+        when().
+                post(LOGIN_ENDPOINT).
+        then().
+                statusCode(HttpStatus.SC_BAD_REQUEST).
+                body("error", is("We're sorry, but this username or password was not found in our system."));
 
     }
 
+    @Test
+    public void testLoginComUsernameCorretoEPasswordInvalido(){
+
+        User user = new User();
+        user.setUsername("jsmith");
+        user.setPassword("!@###");
+
+        given().
+                body(user).
+        when().
+                post(LOGIN_ENDPOINT).
+        then().
+                statusCode(HttpStatus.SC_BAD_REQUEST).
+                body("error", is("We're sorry, but this username or password was not found in our system."));
+
+    }
+
+    @Test
+    public void testLoginComUsernameInvalidoEPasswordInvalido(){
+
+        User user = new User();
+        user.setUsername("van");
+        user.setPassword("!@###");
+
+        given().
+                body(user).
+        when().
+                post(LOGIN_ENDPOINT).
+        then().
+                statusCode(HttpStatus.SC_BAD_REQUEST).
+                body("error", is("We're sorry, but this username or password was not found in our system."));
+    }
 }
