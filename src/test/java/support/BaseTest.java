@@ -29,8 +29,8 @@ public class BaseTest {
                 .build();
 
         // define que todas respostas das requisições vão ser do tipo JSON
-        RestAssured.responseSpecification = new ResponseSpecBuilder()
-                .expectContentType(ContentType.JSON)
-                .build();
+//        RestAssured.responseSpecification = new ResponseSpecBuilder()
+//                .expectContentType(ContentType.JSON)
+//                .build();
     }
 }

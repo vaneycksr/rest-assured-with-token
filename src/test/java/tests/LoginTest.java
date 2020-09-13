@@ -6,8 +6,7 @@ import org.junit.Test;
 import support.BaseTest;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 
 public class LoginTest extends BaseTest {
 
@@ -33,9 +32,9 @@ public class LoginTest extends BaseTest {
     @Test
     public void testLoginComUsernameInvalidoEPasswordCorreto(){
 
-        User user = new User();
-        user.setUsername("qqq");
-        user.setPassword("demo1234");
+     User user = new User();
+     user.setUsername("qqq");
+     user.setPassword("demo1234");
 
         given().
                 body(user).
@@ -43,7 +42,7 @@ public class LoginTest extends BaseTest {
                 post(LOGIN_ENDPOINT).
         then().
                 statusCode(HttpStatus.SC_BAD_REQUEST).
-                body("error", is("We're sorry, but this username or password was not found in our system."));
+                body(containsString("We're sorry, but this username or password was not found in our system."));
 
     }
 
@@ -60,12 +59,13 @@ public class LoginTest extends BaseTest {
                 post(LOGIN_ENDPOINT).
         then().
                 statusCode(HttpStatus.SC_BAD_REQUEST).
-                body("error", is("We're sorry, but this username or password was not found in our system."));
+                body(containsString("We're sorry, but this username or password was not found in our system."));
 
     }
 
     @Test
     public void testLoginComUsernameInvalidoEPasswordInvalido(){
+
 
         User user = new User();
         user.setUsername("van");
@@ -77,6 +77,68 @@ public class LoginTest extends BaseTest {
                 post(LOGIN_ENDPOINT).
         then().
                 statusCode(HttpStatus.SC_BAD_REQUEST).
-                body("error", is("We're sorry, but this username or password was not found in our system."));
+
+                /**
+                 * Comentei essa validação pois também comentei a validação que estava fazendo na classe BaseTest,
+                 * onde verificava se as respostas das requisições retornavam em formato JSON. Como nesse API algumas respostas
+                 * estão sendo retornadas no formato 'text/plain', estou fazendo as verificações apenas buscando alguns textos
+                 * na string que é retornada.
+                 * */
+                //body("error", is("We're sorry, but this username or password was not found in our system."));
+                body(containsString("We're sorry, but this username or password was not found in our system."));
     }
+
+    @Test
+    public void testVerificarSeUsuarioEstaLogadoUtilizandoTokenNoHeaderComInformacoesValidas(){
+
+        User user = new User();
+        user.setUsername("jsmith");
+        user.setPassword("demo1234");
+
+        given().
+                headers("Authorization","Bearer " + extrairTokenDoUsuario(user.getUsername(), user.getPassword())).
+        when().
+                get(LOGIN_ENDPOINT).
+        then().
+                statusCode(HttpStatus.SC_OK).
+                body("loggedin", is("true"));
+
+    }
+
+    @Test
+    public void testVerificarSeUsuarioEstaLogadoSemPassarHeader(){
+
+        User user = new User();
+        user.setUsername("jsmith");
+        user.setPassword("demo1234");
+
+        given().
+        when().
+                get(LOGIN_ENDPOINT).
+        then().
+                statusCode(HttpStatus.SC_UNAUTHORIZED).
+                body(containsString("Please log in first"));
+    }
+
+    // TODO: 12/09/2020 fazer mais verificacoes com o token 
+
+    public String extrairTokenDoUsuario(String extractUser, String extractPassword){
+
+        User user = new User();
+        user.setUsername(extractUser);
+        user.setPassword(extractPassword);
+
+        return given().
+                body(user).
+        when().
+                post(LOGIN_ENDPOINT).
+        then().
+                statusCode(HttpStatus.SC_OK).
+        extract().
+                // extrai o token que está nesse campo
+                path("Authorization");
+
+    }
+
+
 }
