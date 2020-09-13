@@ -60,12 +60,10 @@ public class LoginTest extends BaseTest {
         then().
                 statusCode(HttpStatus.SC_BAD_REQUEST).
                 body(containsString("We're sorry, but this username or password was not found in our system."));
-
     }
 
     @Test
     public void testLoginComUsernameInvalidoEPasswordInvalido(){
-
 
         User user = new User();
         user.setUsername("van");
@@ -88,6 +86,8 @@ public class LoginTest extends BaseTest {
                 body(containsString("We're sorry, but this username or password was not found in our system."));
     }
 
+    /********** Testes utilizando token **********/
+
     @Test
     public void testVerificarSeUsuarioEstaLogadoUtilizandoTokenNoHeaderComInformacoesValidas(){
 
@@ -108,10 +108,6 @@ public class LoginTest extends BaseTest {
     @Test
     public void testVerificarSeUsuarioEstaLogadoSemPassarHeader(){
 
-        User user = new User();
-        user.setUsername("jsmith");
-        user.setPassword("demo1234");
-
         given().
         when().
                 get(LOGIN_ENDPOINT).
@@ -120,7 +116,46 @@ public class LoginTest extends BaseTest {
                 body(containsString("Please log in first"));
     }
 
-    // TODO: 12/09/2020 fazer mais verificacoes com o token 
+    @Test
+    public void testVerificarSeUsuarioEstaLogadoSemPassarTokenApenasOBearer(){
+
+        given().
+                headers("Authorization","Bearer").
+        when().
+                get(LOGIN_ENDPOINT).
+        then().
+                statusCode(HttpStatus.SC_UNAUTHORIZED).
+                body(containsString("Please log in first"));
+    }
+
+    @Test
+    public void testVerificarUsuarioComParteDoTokenValido(){
+
+        User user = new User();
+        user.setUsername("jsmith");
+        user.setPassword("demo1234");
+
+        given().
+                headers("Authorization","Bearer " + extrairTokenDoUsuario(user.getUsername(), user.getPassword()).substring(0,8)).
+        when().
+                get(LOGIN_ENDPOINT).
+        then().
+                statusCode(HttpStatus.SC_UNAUTHORIZED).
+                body(containsString("Please log in first"));
+
+    }
+
+    @Test
+    public void testVerificarUsuarioComTokenInvalido(){
+
+        given().
+                headers("Authorization","Bearer " + "ASASA#$\"@$@#DSADA32321/Sh4=").
+        when().
+                get(LOGIN_ENDPOINT).
+        then().
+                statusCode(HttpStatus.SC_UNAUTHORIZED).
+                body(containsString("Please log in first"));
+    }
 
     public String extrairTokenDoUsuario(String extractUser, String extractPassword){
 
@@ -137,8 +172,6 @@ public class LoginTest extends BaseTest {
         extract().
                 // extrai o token que está nesse campo
                 path("Authorization");
-
     }
-
 
 }
