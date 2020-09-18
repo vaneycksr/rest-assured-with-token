@@ -157,21 +157,21 @@ public class LoginTest extends BaseTest {
                 body(containsString("Please log in first"));
     }
 
-    public String extrairTokenDoUsuario(String extractUser, String extractPassword){
-
-        User user = new User();
-        user.setUsername(extractUser);
-        user.setPassword(extractPassword);
-
-        return given().
-                body(user).
-        when().
-                post(LOGIN_ENDPOINT).
-        then().
-                statusCode(HttpStatus.SC_OK).
-        extract().
-                // extrai o token que está nesse campo
-                path("Authorization");
-    }
+//    public String extrairTokenDoUsuario(String extractUser, String extractPassword){
+//
+//        User user = new User();
+//        user.setUsername(extractUser);
+//        user.setPassword(extractPassword);
+//
+//        return given().
+//                body(user).
+//        when().
+//                post(LOGIN_ENDPOINT).
+//        then().
+//                statusCode(HttpStatus.SC_OK).
+//        extract().
+//                // extrai o token que está nesse campo
+//                path("Authorization");
+//    }
 
 }

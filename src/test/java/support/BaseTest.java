@@ -1,13 +1,14 @@
 package support;
 
+import domain.User;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
+import org.apache.http.HttpStatus;
 import org.junit.BeforeClass;
 
-import static io.restassured.RestAssured.basePath;
-import static io.restassured.RestAssured.baseURI;
+import static io.restassured.RestAssured.*;
 
 public class BaseTest {
 
@@ -32,5 +33,31 @@ public class BaseTest {
 //        RestAssured.responseSpecification = new ResponseSpecBuilder()
 //                .expectContentType(ContentType.JSON)
 //                .build();
+    }
+
+    public String extrairTokenDoUsuario(String extractUser, String extractPassword){
+
+        User user = new User();
+        user.setUsername(extractUser);
+        user.setPassword(extractPassword);
+
+        return given().
+                body(user).
+            when().
+                post("/login").
+            then().
+                statusCode(HttpStatus.SC_OK).
+            extract().
+                // extrai o token que está nesse campo
+                path("Authorization");
+    }
+
+    public User usuarioPadrao(){
+
+        User user = new User();
+        user.setUsername("jsmith");
+        user.setPassword("demo1234");
+
+        return user;
     }
 }
