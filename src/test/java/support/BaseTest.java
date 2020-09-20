@@ -60,4 +60,13 @@ public class BaseTest {
 
         return user;
     }
+
+    public User usuarioPadrao(String username, String password){
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+
+        return user;
+    }
 }

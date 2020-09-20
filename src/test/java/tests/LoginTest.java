@@ -76,12 +76,12 @@ public class LoginTest extends BaseTest {
         then().
                 statusCode(HttpStatus.SC_BAD_REQUEST).
 
-                /**
+                /*
                  * Comentei essa validação pois também comentei a validação que estava fazendo na classe BaseTest,
                  * onde verificava se as respostas das requisições retornavam em formato JSON. Como nesse API algumas respostas
                  * estão sendo retornadas no formato 'text/plain', estou fazendo as verificações apenas buscando alguns textos
                  * na string que é retornada.
-                 * */
+                 **/
                 //body("error", is("We're sorry, but this username or password was not found in our system."));
                 body(containsString("We're sorry, but this username or password was not found in our system."));
     }
